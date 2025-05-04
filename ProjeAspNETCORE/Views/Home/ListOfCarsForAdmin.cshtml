@@ -1,0 +1,61 @@
+﻿@model List<ProjeAspNETCORE.Models.Car> 
+@{
+    ViewData["Title"] = "ListOfCarsForAdmin";
+    Layout = "~/Views/Home/AdminHomePage.cshtml";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet" />
+
+    <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body id="top">
+  
+
+    <div class="container mt-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+        }
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            @foreach (var car in Model)
+            {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img src="@car.ImagePath" class="card-img-top" alt="Car Image">
+                            <div class="card-body">
+                                <h5 class="card-title">@car.Brand @car.Brand</h5>
+                                <p class="card-text">
+                                    Year: @car.Year<br />
+                                    Price: $@car.Price
+                                </p>
+                                <a class="btn btn-sm btn-primary" href="CarEditing?id=@car.Id" >Update</a>
+                                <a class="btn btn-sm btn-danger" href="DeleteACar?id=@car.Id" >Delete</a>
+                            </div>
+                        </div>
+                    </div>
+            }
+        </div>
+    </div>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

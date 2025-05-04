@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ProjeAspNETCORE.Models.BookACar>
+@{
+    ViewData["Title"] = "UserBookingPage";
+    Layout = "~/Views/Home/UserHomePage.cshtml";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <title>My Bookings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+    <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        .page-content {
+            padding-top: 100px;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f5ff;
+            color: #003795;
+            font-weight: bold;
+        }
+        .status-approved {
+            color: green;
+            font-weight: bold;
+        }
+        .status-rejected {
+            color: red;
+            font-weight: bold;
+        }
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="page-content">
+    <h2 style="text-align: center;">My Bookings</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Days</th>
+            <th>Price</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+                @foreach (var booking in Model)
+                {
+                <tr>
+                    <td>@booking.FromDate.ToString("MMM d, yyyy")</td>
+                    <td>@booking.ToDate.ToString("MMM d, yyyy")</td>
+                    <td>@booking.Days</td>
+                    <td>@booking.Price $</td>
+                    <td>
+                        <span class="@(booking.BookCarStatus == ProjeAspNETCORE.Models.BookCarStatus.Approved ? "status-approved" : booking.BookCarStatus == ProjeAspNETCORE.Models.BookCarStatus.Rejected ? "status-rejected" : "status-pending")">
+                                @booking.BookCarStatus
+                        </span>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/bootstrap.bundle.min.js"></script>
+</body>
