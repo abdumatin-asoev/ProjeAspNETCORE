@@ -14,7 +14,8 @@ namespace ProjeAspNETCORE.Controllers
         private readonly Context _context;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        public static User _user =new User();
+        public static User _user = new User();
+
         public HomeController(Context context, SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _context = context;
@@ -29,7 +30,7 @@ namespace ProjeAspNETCORE.Controllers
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "User not found");
-                return View("Index");
+                return View("Login");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
@@ -44,22 +45,28 @@ namespace ProjeAspNETCORE.Controllers
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt");
-            return View("Index");
+            return View("Login");
         }
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
-        public IActionResult BackToLog() { 
-            return RedirectToAction("Index"); 
-        }
-        public IActionResult RegisterPage() 
+
+        public IActionResult BackToLog()
         {
-            return View(); 
+            return RedirectToAction("Login");
         }
-        public IActionResult AdminHomePage() { 
+
+        public IActionResult RegisterPage()
+        {
             return View();
         }
+
+        public IActionResult AdminHomePage()
+        {
+            return View();
+        }
+
         public IActionResult PostACar()
         {
             ViewBag.ListOfBrands = new SelectList(GetBrands());
@@ -68,13 +75,26 @@ namespace ProjeAspNETCORE.Controllers
 
             ViewBag.ListOfTypes = new SelectList(GetType());
 
-            ViewBag.ListOfTransmissions = new SelectList(GetTRANSMISSIONS());
-            
+            ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> PostACarControll(Car postACar, IFormFile ImagePath)
         {
+            // Remove ImagePath from ModelState to prevent validation issues
+            ModelState.Remove("ImagePath");
+
+            if (!ModelState.IsValid)
+            {
+                // Repopulate dropdowns in case of validation errors
+                ViewBag.ListOfBrands = new SelectList(GetBrands());
+                ViewBag.ListOfColors = new SelectList(GetColors());
+                ViewBag.ListOfTypes = new SelectList(GetType());
+                ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+                return View("PostACar", postACar);
+            }
 
             if (ImagePath != null && ImagePath.Length > 0)
             {
@@ -88,18 +108,17 @@ namespace ProjeAspNETCORE.Controllers
                 {
                     await ImagePath.CopyToAsync(stream);
                 }
-                
+
                 postACar.ImagePath = "/uploads/" + newFileName;
             }
-            Console.WriteLine(postACar.ImagePath);
 
-           
-            
             _context._Car.Add(postACar);
             await _context.SaveChangesAsync();
-            
-            return RedirectToAction("PostACar");
+
+            return RedirectToAction("ListOfCarsForAdmin");
         }
+
+
         public IActionResult Booking()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -107,15 +126,19 @@ namespace ProjeAspNETCORE.Controllers
             {
                 return Unauthorized();
             }
-            
-          //  List<BookACar> bookACars = _context._BookACar.ToList();
+
             List<BookACar> bookACars = _context._BookACar
-                 .Include(b => b.User) 
+                 .Include(b => b.User)
                          .ToList();
+            foreach (var booking in bookACars)
+            {
+                booking.Car = _context._Car.Find(booking.CarId);
+            }
 
             return View(bookACars);
         }
-        public IActionResult AdminSearch() 
+
+        public IActionResult AdminSearch()
 
         {
             ViewBag.ListOfBrands = new SelectList(GetBrands());
@@ -124,38 +147,48 @@ namespace ProjeAspNETCORE.Controllers
 
             ViewBag.ListOfTypes = new SelectList(GetType());
 
-            ViewBag.ListOfTransmissions = new SelectList(GetTRANSMISSIONS());
+            ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
             SearchClass first = new SearchClass();
             return View(first);
         }
+
         public IActionResult LogOut()
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Login");
         }
+
         [HttpPost]
-        public IActionResult CreateUser(User newuser, string password)
+        public async Task<IActionResult> CreateUser(RegisterViewModel model)
         {
-            var userExist = _userManager.FindByEmailAsync(newuser.Email);   
-            if (userExist.Result == null)
+            if (!ModelState.IsValid)
             {
-                newuser.Role = UserRole.Customer;
-                var result = _userManager.CreateAsync(newuser, password).Result;
-				if (result.Succeeded)
-				{
-                   
-					_userManager.AddToRoleAsync(newuser, "Customer").Wait();
-					Console.WriteLine("✔ Customer создан успешно!");
-				}
-				else
-				{
-					foreach (var error in result.Errors)
-					{
-						Console.WriteLine($"❌ Ошибка: {error.Description}");
-					}
-				}
-			}
-            return View("Index"); 
+                return View("RegisterPage", model);
+            }
+
+            var user = new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                UserName = model.UserName,
+                Role = UserRole.Customer
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "Customer");
+                return RedirectToAction("Login");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View("RegisterPage", model);
         }
+
         public IActionResult UserHomePage()
         {
             return View();
@@ -167,21 +200,13 @@ namespace ProjeAspNETCORE.Controllers
             {
                 return Unauthorized();
             }
-            var bookings = _context._BookACar.Where(b => b.UserId==userId).ToList();
+            var bookings = _context._BookACar.Where(b => b.UserId == userId).ToList();
+            foreach (var booking in bookings)
+            {
+                booking.Car = _context._Car.Find(booking.CarId);
+            }
 
-            return View(bookings); 
-        }
-        public IActionResult UserSearchPage()
-        {
-            ViewBag.ListOfBrands = new SelectList(GetBrands());
-
-            ViewBag.ListOfColors = new SelectList(GetColors());
-
-            ViewBag.ListOfTypes = new SelectList(GetType());
-
-            ViewBag.ListOfTransmissions = new SelectList(GetTRANSMISSIONS());
-            SearchClass first = new SearchClass();
-            return View(first);
+            return View(bookings);
         }
         public IActionResult UserBookACar(long id)
         {
@@ -193,41 +218,79 @@ namespace ProjeAspNETCORE.Controllers
             bookingCar.CarId = id;
             return View(bookingCar);
         }
-        [HttpPost]
-        public IActionResult Search(SearchClass search) 
+
+        public IActionResult UserSearchPage()
         {
-            var query = _context._Car.AsQueryable();
+            ViewBag.ListOfBrands = new SelectList(GetBrands());
 
-            if (!string.IsNullOrEmpty(search.Brand))
-                query = query.Where(c => c.Brand == search.Brand);
+            ViewBag.ListOfColors = new SelectList(GetColors());
 
-            if (!string.IsNullOrEmpty(search.Type))
-                query = query.Where(c => c.Type == search.Type);
+            ViewBag.ListOfTypes = new SelectList(GetType());
 
-            if (!string.IsNullOrEmpty(search.Color))
-                query = query.Where(c => c.Color == search.Color);
-
-            if (!string.IsNullOrEmpty(search.Transmission))
-                query = query.Where(c => c.Transmission == search.Transmission);
-
-            search.CarsFound = query.Select(c => new Car
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Brand = c.Brand,
-                Color = c.Color,
-                Description = c.Description,
-                ImagePath = c.ImagePath,
-                Transmission = c.Transmission,
-                Type = c.Type,
-                Year = c.Year,
-                Price = c.Price
-            }).ToList();
-            if (search.Id == "AdminSearch")
-                return View("AdminSearch", search); 
-            else
-                return View("UserSearchPage",search); 
+            ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+            SearchClass first = new SearchClass();
+            return View(first);
         }
+
+        [HttpPost]
+        public IActionResult Search(SearchClass search)
+        {
+            // Repopulate the ViewBag for dropdowns
+            ViewBag.ListOfBrands = new SelectList(GetBrands());
+            ViewBag.ListOfTypes = new SelectList(GetType());
+            ViewBag.ListOfColors = new SelectList(GetColors());
+            ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+
+            // Check if all filters are empty
+            if (string.IsNullOrEmpty(search.Brand) &&
+                string.IsNullOrEmpty(search.Type) &&
+                string.IsNullOrEmpty(search.Color) &&
+                string.IsNullOrEmpty(search.Transmission))
+            {
+                // Return an empty list if no filters are selected
+                search.CarsFound = new List<Car>();
+            }
+            else
+            {
+                // Start with the base query
+                var query = _context._Car.AsQueryable();
+
+                // Apply filters based on the search criteria
+                if (!string.IsNullOrEmpty(search.Brand))
+                    query = query.Where(c => c.Brand == search.Brand);
+
+                if (!string.IsNullOrEmpty(search.Type))
+                    query = query.Where(c => c.Type == search.Type);
+
+                if (!string.IsNullOrEmpty(search.Color))
+                    query = query.Where(c => c.Color == search.Color);
+
+                if (!string.IsNullOrEmpty(search.Transmission))
+                    query = query.Where(c => c.Transmission == search.Transmission);
+
+                // Execute the query and populate the CarsFound list
+                search.CarsFound = query.Select(c => new Car
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Brand = c.Brand,
+                    Color = c.Color,
+                    Description = c.Description,
+                    ImagePath = c.ImagePath,
+                    Transmission = c.Transmission,
+                    Type = c.Type,
+                    Year = c.Year,
+                    Price = c.Price
+                }).ToList();
+            }
+
+            // Return the appropriate view based on the search ID
+            if (search.Id == "AdminSearch")
+                return View("AdminSearch", search);
+            else
+                return View("UserSearchPage", search);
+        }
+
         public IActionResult ListOfCarsForUser()
         {
             var cars = _context._Car.ToList();
@@ -235,7 +298,7 @@ namespace ProjeAspNETCORE.Controllers
         }
         public IActionResult ListOfCarsForAdmin()
         {
-            var cars=_context._Car.ToList();
+            var cars = _context._Car.ToList();
             return View(cars);
         }
         [HttpPost]
@@ -254,7 +317,7 @@ namespace ProjeAspNETCORE.Controllers
             _context.SaveChanges();
             return RedirectToAction("Booking");
         }
-        public IActionResult DeleteACar(long id) 
+        public IActionResult DeleteACar(long id)
         {
             var car = _context._Car.Find(id);
             if (car != null)
@@ -274,13 +337,26 @@ namespace ProjeAspNETCORE.Controllers
 
             ViewBag.ListOfTypes = new SelectList(GetType());
 
-            ViewBag.ListOfTransmissions = new SelectList(GetTRANSMISSIONS());
-            return View(car); 
+            ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+            return View(car);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateACar(Car updateCar, IFormFile ImagePath)
         {
+            // Remove ImagePath from ModelState to prevent validation issues
+            ModelState.Remove("ImagePath");
+
+            if (!ModelState.IsValid)
+            {
+                // Repopulate dropdowns in case of validation errors
+                ViewBag.ListOfBrands = new SelectList(GetBrands());
+                ViewBag.ListOfColors = new SelectList(GetColors());
+                ViewBag.ListOfTypes = new SelectList(GetType());
+                ViewBag.ListOfTransmissions = new SelectList(GetTransmissions());
+                return View("CarEditing", updateCar);
+            }
+
             if (ImagePath != null && ImagePath.Length > 0)
             {
                 var fileName = Path.GetFileNameWithoutExtension(ImagePath.FileName);
@@ -298,18 +374,18 @@ namespace ProjeAspNETCORE.Controllers
             }
             _context._Car.Update(updateCar);
             await _context.SaveChangesAsync();
-            return RedirectToAction("ListOfCarsForAdmin"); 
+            return RedirectToAction("ListOfCarsForAdmin");
         }
         [HttpPost]
-        public async Task<IActionResult> BookACar(BookACar booking) 
+        public async Task<IActionResult> BookACar(BookACar booking)
         {
             booking.Days = (booking.ToDate - booking.FromDate).Days;
             booking.Price = booking.Days * _context._Car.Find(booking.CarId).Price;
             _context._BookACar.Add(booking);
             await _context.SaveChangesAsync();
-            return RedirectToAction("ListOfCarsForUser"); 
+            return RedirectToAction("ListOfCarsForUser");
         }
-    
+
         private List<string> GetBrands()
         {
             return new List<string> {"Toyota", "BMW", "Honda","Mercedes","Bugatti","Nissan",
@@ -318,7 +394,7 @@ namespace ProjeAspNETCORE.Controllers
 
         private List<string> GetColors()
         {
-            return new List<string> {  
+            return new List<string> {
             "Black",
             "White",
             "Silver",
@@ -339,10 +415,10 @@ namespace ProjeAspNETCORE.Controllers
         {
             return new List<string> { "Petrol", "Diesel", "Electric", "Hybrid" };
         }
-        private List<string> GetTRANSMISSIONS()
+        private List<string> GetTransmissions()
         {
             return new List<string> { "Automatic", "Manual", "CVT", "Robot" };
         }
 
     }
-    }
+}

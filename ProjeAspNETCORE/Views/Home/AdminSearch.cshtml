@@ -54,41 +54,42 @@
 
 <div class="inner-content">
     <div class="dashboard-filter">
-        <form asp-action="Search" asp-controller="Home" method="post">
-            <div class="filter-grid">
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Brand</label>
-                    <select class="form-select"  asp-items="ViewBag.ListOfBrands">
-                      <option value="">-- Select a Brand --</option>
-                    </select>
-                </div>
+            <form asp-action="Search" asp-controller="Home" method="post">
+                <input type="hidden" name="Id" value="AdminSearch" />
+                <div class="filter-grid">
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Brand</label>
+                        <select class="form-select" asp-items="ViewBag.ListOfBrands" name="Brand">
+                            <option value="">Select a Brand</option>
+                        </select>
+                    </div>
 
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Type</label>
-                    <select  asp-items="ViewBag.ListOfTypes" class="form-select">
-                        <option value="">Select a Type</option>
-                    </select>
-                </div>
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Type</label>
+                        <select asp-items="ViewBag.ListOfTypes" class="form-select" name="Type">
+                            <option value="">Select a Type</option>
+                        </select>
+                    </div>
 
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Color</label>
-                    <select  asp-items="ViewBag.ListOfColors" class="form-select">
-                        <option value="">Select a Color</option>
-                    </select>
-                </div>
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Color</label>
+                        <select asp-items="ViewBag.ListOfColors" class="form-select" name="Color">
+                            <option value="">Select a Color</option>
+                        </select>
+                    </div>
 
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Transmission</label>
-                    <select  asp-items="ViewBag.ListOfTransmissions" class="form-select">
-                        <option value="">Select a Transmission</option>
-                    </select>
-                </div>
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Transmission</label>
+                        <select asp-items="ViewBag.ListOfTransmissions" class="form-select" name="Transmission">
+                            <option value="">Select a Transmission</option>
+                        </select>
+                    </div>
 
-                <div class="search-button">
-                    <button type="submit" class="btn btn-primary filterBtn">Search Car</button>
+                    <div class="search-button">
+                        <button type="submit" class="btn btn-primary filterBtn">Search Car</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
     </div>
 </div>
 

@@ -53,6 +53,7 @@
     <table>
         <thead>
         <tr>
+            <th>Name</th>
             <th>From</th>
             <th>To</th>
             <th>Days</th>
@@ -64,6 +65,7 @@
                 @foreach (var booking in Model)
                 {
                 <tr>
+                    <td>@booking.Car.Name</td>
                     <td>@booking.FromDate.ToString("MMM d, yyyy")</td>
                     <td>@booking.ToDate.ToString("MMM d, yyyy")</td>
                     <td>@booking.Days</td>

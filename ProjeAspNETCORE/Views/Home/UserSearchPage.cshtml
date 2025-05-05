@@ -4,136 +4,144 @@
     ViewData["Title"] = "UserSearchPage";
     Layout = "~/Views/Home/UserHomePage.cshtml";
 }
-@{Model.Id="UserSearchPage";}
+@{
+    Model.Id = "UserSearchPage";
+}
 <head>
     <meta charset="UTF-8">
     <title>@ViewData["Title"]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
     <style>
- .inner-content {
+        .inner-content {
             padding: 40px;
         }
+
         .dashboard-filter {
             margin-bottom: 20px;
         }
+
         .filter-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             align-items: flex-end;
         }
+
         .filter-fields-width {
             flex: 1;
             min-width: 200px;
         }
+
         .search-button {
             margin-top: 24px;
         }
+
         .filterBtn {
             width: 100%;
         }
+
         .profile {
             height: 130px;
             width: 220px;
             border-radius: 10px;
         }
+
         .car-card {
             background-color: white;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }    </style>
+        }
+    </style>
 </head>
 <body>
 
+    <div class="inner-content">
+        <div class="dashboard-filter">
+            <form asp-action="Search" asp-controller="Home" method="post">
+                <input type="hidden" name="Id" value="UserSearchPage" />
+                <div class="filter-grid">
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Brand</label>
+                        <select class="form-select" asp-items="ViewBag.ListOfBrands" name="Brand">
+                            <option value="">Select a Brand</option>
+                        </select>
+                    </div>
 
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Type</label>
+                        <select asp-items="ViewBag.ListOfTypes" class="form-select" name="Type">
+                            <option value="">Select a Type</option>
+                        </select>
+                    </div>
 
-<div class="inner-content">
-    <div class="dashboard-filter">
-        <form asp-action="Search" asp-controller="Home" method="post">
-            <div class="filter-grid">
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Brand</label>
-                    <select class="form-select"  asp-items="ViewBag.ListOfBrands">
-                      <option value="">-- Select a Brand --</option>
-                    </select>
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Color</label>
+                        <select asp-items="ViewBag.ListOfColors" class="form-select" name="Color">
+                            <option value="">Select a Color</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select-dropdown filter-fields-width">
+                        <label class="form-label">Transmission</label>
+                        <select asp-items="ViewBag.ListOfTransmissions" class="form-select" name="Transmission">
+                            <option value="">Select a Transmission</option>
+                        </select>
+                    </div>
+
+                    <div class="search-button">
+                        <button type="submit" class="btn btn-primary filterBtn">Search Car</button>
+                    </div>
                 </div>
-
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Type</label>
-                    <select  asp-items="ViewBag.ListOfTypes" class="form-select">
-                        <option value="">Select a Type</option>
-                    </select>
-                </div>
-
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Color</label>
-                    <select  asp-items="ViewBag.ListOfColors" class="form-select">
-                        <option value="">Select a Color</option>
-                    </select>
-                </div>
-
-                <div class="filter-select-dropdown filter-fields-width">
-                    <label  class="form-label">Transmission</label>
-                    <select  asp-items="ViewBag.ListOfTransmissions" class="form-select">
-                        <option value="">Select a Transmission</option>
-                    </select>
-
-                </div>
-                
-                <div class="search-button">
-                    <button type="submit" class="btn btn-primary filterBtn">Search Car</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Results -->
-<div style="background-color: #F6F6F6; display: flex; justify-content: center; padding: 20px;">
-    <div style="max-width: 800px; width: 100%;">
+    <!-- Results -->
+    <div style="background-color: #F6F6F6; display: flex; justify-content: center; padding: 20px;">
+        <div style="max-width: 800px; width: 100%;">
             @if (Model.CarsFound != null && Model.CarsFound.Any())
             {
                 foreach (var car in Model.CarsFound)
                 {
-                                <div class="car-card">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <img class="profile" src="@car.ImagePath" alt="Car Image" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <h2 style="cursor: pointer; color: #105ee7;">@($"{car.Brand} - {car.Name}")</h2>
-                                            <p>@car.Description</p>
-                                            <hr />
-                                            <h5>
-                                                Price: <b>$@car.Price</b> -
-                                                Color: <b>@car.Color</b> -
-                                                Transmission: <b>@car.Transmission</b> -
-                                                Type: <b>@car.Type</b> -
-                                                Year: <b>@car.Year</b>
-                                            </h5>
-                                            <hr />
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="car-card">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img class="profile" src="@car.ImagePath" alt="Car" />
+                            </div>
+                            <div class="col-md-8">
+                                <h2 style="cursor: pointer; color: #105ee7;">@($"{car.Brand} - {car.Name}")</h2>
+                                <p>@car.Description</p>
+                                <hr />
+                                <h5>
+                                    Price: <b>$@car.Price</b> -
+                                    Color: <b>@car.Color</b> -
+                                    Transmission: <b>@car.Transmission</b> -
+                                    Type: <b>@car.Type</b> -
+                                    Year: <b>@car.Year</b>
+                                </h5>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
                 }
             }
             else
             {
-                    <div class="alert alert-info">No cars found matching your search criteria.</div>
+                <div class="alert alert-info">No cars found matching your search criteria.</div>
             }
+        </div>
     </div>
-</div>
 
-<!-- Scripts -->
-<script src="~/js/jquery.min.js"></script>
-<script src="~/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/jquery.sticky.js"></script>
-<script src="~/js/click-scroll.js"></script>
-<script src="~/js/custom.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/jquery.sticky.js"></script>
+    <script src="~/js/click-scroll.js"></script>
+    <script src="~/js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

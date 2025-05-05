@@ -1,5 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model List<ProjeAspNETCORE.Models.Car> 
+@model List<ProjeAspNETCORE.Models.Car>
 @{
     ViewData["Title"] = "ListOfCarsForUser";
     Layout = "~/Views/Home/UserHomePage.cshtml";
@@ -17,6 +17,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet" />
 
     <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .fixed-image {
+            width: 100%; /* Ensures the image takes the full width of the card */
+            height: 200px; /* Fixed height for all images */
+            object-fit: cover; /* Ensures the image fits within the dimensions without distortion */
+            border-radius: 5px; /* Optional: Add rounded corners to match the card style */
+        }
+    </style>
 </head>
 
 <body id="top">
@@ -25,12 +33,12 @@
     <div class="container mt-3">
         @if (TempData["SuccessMessage"] != null)
         {
-                <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+            <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
         }
 
         @if (TempData["ErrorMessage"] != null)
         {
-                <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+            <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
         }
     </div>
 
@@ -38,19 +46,26 @@
         <div class="row">
             @foreach (var car in Model)
             {
-                        <div class="col-md-4">
-                            <div class="card mb-4 shadow-sm">
-                                <img src="@car.ImagePath" class="card-img-top" alt="Car Image">
-                                <div class="card-body">
-                                    <h5 class="card-title">@car.Brand @car.Brand</h5>
-                                    <p class="card-text">
-                                        Year: @car.Year<br />
-                                        Price: $@car.Price
-                                    </p>
-                                    <a asp-controller="Home" asp-action="UserBookACar" asp-route-id="@car.Id" class="btn btn-sm btn-primary">Book</a>
-                                </div>
-                            </div>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="@car.ImagePath" class="card-img-top fixed-image" alt="Car">
+                        <div class="card-body">
+                            <h5 class="card-title">@car.Brand - @car.Name</h5>
+                            <p class="card-text">
+                                Year: @car.Year<br />
+                                Price: $@car.Price<br />
+                                Color: @car.Color<br />
+                                Type: @car.Type<br />
+                                Transmission: @car.Transmission
+                            </p>
+                            <h6>Description:</h6>
+                            <p>
+                                @car.Description
+                            </p>
+                            <a asp-controller="Home" asp-action="UserBookACar" asp-route-id="@car.Id" class="btn btn-sm btn-primary">Book</a>
                         </div>
+                    </div>
+                </div>
             }
         </div>
     </div>

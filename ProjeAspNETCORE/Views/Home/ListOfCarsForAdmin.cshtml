@@ -1,4 +1,4 @@
-﻿@model List<ProjeAspNETCORE.Models.Car> 
+﻿@model List<ProjeAspNETCORE.Models.Car>
 @{
     ViewData["Title"] = "ListOfCarsForAdmin";
     Layout = "~/Views/Home/AdminHomePage.cshtml";
@@ -16,10 +16,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet" />
 
     <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .fixed-image {
+            width: 100%; /* Ensures the image takes the full width of the card */
+            height: 200px; /* Fixed height for all images */
+            object-fit: cover; /* Ensures the image fits within the dimensions without distortion */
+            border-radius: 5px; /* Optional: Add rounded corners to match the card style */
+        }
+    </style>
 </head>
 
 <body id="top">
-  
+
 
     <div class="container mt-3">
         @if (TempData["SuccessMessage"] != null)
@@ -37,20 +45,27 @@
         <div class="row">
             @foreach (var car in Model)
             {
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <img src="@car.ImagePath" class="card-img-top" alt="Car Image">
-                            <div class="card-body">
-                                <h5 class="card-title">@car.Brand @car.Brand</h5>
-                                <p class="card-text">
-                                    Year: @car.Year<br />
-                                    Price: $@car.Price
-                                </p>
-                                <a class="btn btn-sm btn-primary" href="CarEditing?id=@car.Id" >Update</a>
-                                <a class="btn btn-sm btn-danger" href="DeleteACar?id=@car.Id" >Delete</a>
-                            </div>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm object-fit-scale">
+                        <img src="@car.ImagePath" class="card-img-top fixed-image" alt="Car">
+                        <div class="card-body">
+                            <h5 class="card-title">@car.Brand - @car.Name</h5>
+                            <p class="card-text">
+                                Year: @car.Year<br />
+                                Price: $@car.Price<br />
+                                Color: @car.Color<br />
+                                Type: @car.Type<br />
+                                Transmission: @car.Transmission
+                            </p>
+                            <h6>Description:</h6>
+                            <p>
+                                @car.Description
+                            </p>
+                            <a class="btn btn-sm btn-primary" href="CarEditing?id=@car.Id">Update</a>
+                            <a class="btn btn-sm btn-danger" href="DeleteACar?id=@car.Id">Delete</a>
                         </div>
                     </div>
+                </div>
             }
         </div>
     </div>

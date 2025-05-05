@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -9,39 +8,41 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>HomePage</title>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="~/SideBarTemplate/HomePageStyle.css" rel="stylesheet"/>  
+    <link href="~/SideBarTemplate/HomePageStyle.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
- <script>
-    $(document).ready(function(){
-   $('[data-toggle="offcanvas"]').click(function(){
-       $("#navigation").toggleClass("hidden-xs");
-   });
-});
-</script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <script>
+            $(document).ready(function(){
+           $('[data-toggle="offcanvas"]').click(function(){
+               $("#navigation").toggleClass("hidden-xs");
+           });
+        });
+    </script>
 </head>
 
 <!------ Include the above in your HEAD tag ---------->
 
 <body class="home">
-       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
 
     <div class="container-fluid display-table">
         <div class="row display-table-row">
             <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
                 <div class="logo">
-                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="car_logo" style="width: 50px;"> <img src="http://jskrishna.com/work/merkury/images/circle-logo.png" alt="merkery_logo" class="visible-xs visible-sm circle-logo">
+                    <a href="#">
+                        <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="car_logo" style="width: 50px;"> <img src="http://jskrishna.com/work/merkury/images/circle-logo.png" alt="merkery_logo" class="visible-xs visible-sm circle-logo">
                     </a>
                 </div>
                 <div class="navi">
                     <ul>
-                        <li class="active"><a href="ListOfCarsForUser"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
-                        <li><a href="UserBookingPage"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Bookings</span></a></li>
+                        <li><a href="ListOfCarsForUser"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
+                        <li><a href="UserBookingPage"><i class="bi bi-pencil-square" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Bookings</span></a></li>
                         <li><a href="UserSearchPage"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Search</span></a></li>
                         <li><a href="LogOut"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
-                       <!-- <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Setting</span></a></li>-->>
                     </ul>
                 </div>
             </div>
@@ -52,41 +53,6 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
-    <!-- Modal -->
-    <div id="add_project" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header login-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Project</h4>
-                </div>
-                <div class="modal-body">
-                            <input type="text" placeholder="Project Title" name="name">
-                            <input type="text" placeholder="Post of Post" name="mail">
-                            <input type="text" placeholder="Author" name="passsword">
-                            <textarea placeholder="Desicrption"></textarea>
-                    </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
-                    <button type="button" class="add-project" data-dismiss="modal">Save</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
 </body>
-
-
-
-
-
 </html>

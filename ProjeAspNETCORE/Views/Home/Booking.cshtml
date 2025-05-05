@@ -16,30 +16,87 @@
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         /* CSS styles as-is from the original file */
-        .bookings-container { padding-top: 100px; max-width: 1200px; margin: 0 auto; }
-        .table-header { background-color: #003889; color: white; }
-        .status-badge { padding: 5px 10px; border-radius: 20px; font-weight: 500; font-size: 0.85rem; display: inline-block; }
-        .status-approved { background-color: #d4edda; color: #155724; }
-        .status-rejected { background-color: #f8d7da; color: #721c24; }
-        .status-pending { background-color: #fff3cd; color: #856404; }
-        .action-btn { padding: 5px 12px; border-radius: 4px; font-size: 0.85rem; margin: 2px; display: inline-block; }
-        .approve-btn { background-color: #28a745; color: white; border: none; }
-        .reject-btn { background-color: #dc3545; color: white; border: none; }
-        .price-cell { font-weight: 500; }
-        .table-responsive { box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        th, td { padding: 12px 15px; text-align: left; vertical-align: middle; }
+        .bookings-container {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .table-header {
+            background-color: #003889;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .action-btn {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .approve-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .reject-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .price-cell {
+            font-weight: 500;
+        }
+
+        .table-responsive {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
-   
+
 
     <div class="bookings-container">
-        <h2 class="mb-4" style="color: #003889;">All Bookings</h2>
+        <h2 class="mb-4" style="color: #003889; text-align:center">All Bookings</h2>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-header">
                     <tr>
+                        <th>Username</th>
                         <th>Email</th>
+                        <th>Car</th>
                         <th>From Date</th>
                         <th>To Date</th>
                         <th>Days</th>
@@ -51,42 +108,44 @@
                 <tbody>
                     @foreach (var booking in Model)
                     {
-                            <tr>
-                                <td>@booking.User.Email</td>
-                                <td>@booking.FromDate.ToShortDateString()</td>
-                                <td>@booking.ToDate.ToShortDateString()</td>
-                                <td>@booking.Days</td>
-                                <td class="price-cell">@booking.Price</td>
-                                <td>
+                        <tr>
+                            <td>@booking.User.FirstName @booking.User.LastName</td>
+                            <td>@booking.User.Email</td>
+                            <td>@booking.Car.Brand - @booking.Car.Name</td>
+                            <td>@booking.FromDate.ToShortDateString()</td>
+                            <td>@booking.ToDate.ToShortDateString()</td>
+                            <td>@booking.Days</td>
+                            <td class="price-cell">@booking.Price</td>
+                            <td>
                                 @if (booking.BookCarStatus == BookCarStatus.Approved)
                                 {
-                                            <span class="status-badge status-approved">Approved</span>
+                                    <span class="status-badge status-approved">Approved</span>
                                 }
                                 else if (booking.BookCarStatus == BookCarStatus.Rejected)
                                 {
-                                            <span class="status-badge status-rejected">Rejected</span>
+                                    <span class="status-badge status-rejected">Rejected</span>
                                 }
                                 else if (booking.BookCarStatus == BookCarStatus.Pending)
                                 {
-                                            <span class="status-badge status-pending">Pending</span>
+                                    <span class="status-badge status-pending">Pending</span>
                                 }
-                                </td>
-                                <td>
+                            </td>
+                            <td>
                                 @if (booking.BookCarStatus == BookCarStatus.Pending)
                                 {
-                                            <form asp-controller="Home" asp-action="Approve" asp-route-id="@booking.Id" method="post" style="display:inline;">
-                                                <button type="submit" class="action-btn approve-btn">Approve</button>
-                                            </form>
-                                            <form asp-controller="Home" asp-action="Reject" asp-route-id="@booking.Id" method="post" style="display:inline;">
-                                                <button type="submit" class="action-btn reject-btn">Reject</button>
-                                            </form>
+                                    <form asp-controller="Home" asp-action="Approve" asp-route-id="@booking.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="action-btn approve-btn">Approve</button>
+                                    </form>
+                                    <form asp-controller="Home" asp-action="Reject" asp-route-id="@booking.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="action-btn reject-btn">Reject</button>
+                                    </form>
                                 }
                                 else
                                 {
-                                            <span>—</span>
+                                    <span>—</span>
                                 }
-                                </td>
-                            </tr>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

@@ -48,51 +48,59 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Brand</label>
-                  <select class="form-select" asp-for="Brand" asp-items="ViewBag.ListOfBrands">
-                      <option value="">-- Select a Brand --</option>
+                    <label asp-for="Brand"></label>
+                    <select class="form-select" asp-for="Brand" asp-items="ViewBag.ListOfBrands">
+                        <option value="">-- Select a Brand --</option>
                     </select>
+                    <span asp-validation-for="Brand" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Name</label>
-                    <input class="form-control" asp-for="Name" placeholder="Car Name" />
+                    <label asp-for="Name"></label>
+                    <input class="form-control" asp-for="Name" placeholder="Car Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Type</label>
+                    <label asp-for="Type"></label>
                     <select class="form-select" asp-for="Type" asp-items="ViewBag.ListOfTypes">
-                      <option value="">-- Select a Brand --</option>
+                        <option value="">-- Select Type --</option>
                     </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Transmission</label>
-                  <select class="form-select" asp-for="Transmission" asp-items="ViewBag.ListOfTransmissions">
-                      <option value="">-- Select a Brand --</option>
+                    <label asp-for="Transmission"></label>
+                    <select class="form-select" asp-for="Transmission" asp-items="ViewBag.ListOfTransmissions">
+                        <option value="">-- Select Transmission --</option>
                     </select>
+                    <span asp-validation-for="Transmission" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Color</label>
-                   <select class="form-select" asp-for="Color" asp-items="ViewBag.ListOfColors">
-                      <option value="">-- Select a Brand --</option>
+                    <label asp-for="Color"></label>
+                    <select class="form-select" asp-for="Color" asp-items="ViewBag.ListOfColors">
+                        <option value="">-- Select Color --</option>
                     </select>
+                    <span asp-validation-for="Color" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Model Year</label>
-                    <input class="form-control" asp-for="Year" placeholder="2023" />
+                    <label asp-for="Year"></label>
+                    <input asp-for="Year" class="form-control" placeholder="2023">
+                    <span asp-validation-for="Year" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Price</label>
-                    <input class="form-control" asp-for="Price" placeholder="e.g. 50000" />
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control" placeholder="e.g. 50000">
+                    <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label>Description</label>
-                    <textarea class="form-control" rows="3" asp-for="Description"></textarea>
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="text-center">

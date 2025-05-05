@@ -5,14 +5,21 @@ using ProjeAspNETCORE;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем DbContext — обязательно!
+// Adding DbContext — mandatory!
 builder.Services.AddDbContext<Context>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ??
-                         "Server=(localdb)\\MSSQLLocalDB;Database=CarCompany;Trusted_Connection=True;");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=ARSALANKHROUSH7;Database=CarCompany;Trusted_Connection=True;TrustServerCertificate=True;");
 });
 
-// Настройка Identity
+// Enabling Validation for the entire application
+builder.Services.AddControllersWithViews()
+    .AddMvcOptions(options =>
+    {
+        options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+            _ => "This field is required.");
+    });
+
+// Configuring Identity
 builder.Services
     .AddIdentity<User, IdentityRole<long>>(options =>
     {
@@ -29,7 +36,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Конфигурация middleware
+// Middleware configuration
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -41,12 +48,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // 🔥 ОБЯЗАТЕЛЬНО до UseAuthorization
+app.UseAuthentication(); // 🔥 MANDATORY before UseAuthorization
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}");
+    pattern: "{controller=Home}/{action=Login}");
 SeedAdminUser(app);
 app.Run();
 
@@ -57,20 +64,20 @@ void SeedAdminUser(WebApplication app)
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
 
-        // Убедимся, что роль Admin существует
+        // Ensure the Admin role exists
         var adminRoleExists = roleManager.RoleExistsAsync("Admin").Result;
         if (!adminRoleExists)
         {
             roleManager.CreateAsync(new IdentityRole<long>("Admin")).Wait();
         }
         var customerRoleExists = roleManager.RoleExistsAsync("Customer").Result;
-		if (!customerRoleExists)
-		{
-			roleManager.CreateAsync(new IdentityRole<long>("Customer")).Wait();
-		}
+        if (!customerRoleExists)
+        {
+            roleManager.CreateAsync(new IdentityRole<long>("Customer")).Wait();
+        }
 
-		// Проверим, существует ли уже пользователь
-		var adminUser = userManager.FindByEmailAsync("admin@mail.com").Result;
+        // Check if the admin user already exists
+        var adminUser = userManager.FindByEmailAsync("admin@mail.com").Result;
         if (adminUser == null)
         {
             var user = new User
@@ -87,19 +94,19 @@ void SeedAdminUser(WebApplication app)
             if (result.Succeeded)
             {
                 userManager.AddToRoleAsync(user, "Admin").Wait();
-                Console.WriteLine("✔ Админ создан успешно!");
+                Console.WriteLine("✔ Admin created successfully!");
             }
             else
             {
                 foreach (var error in result.Errors)
                 {
-                    Console.WriteLine($"❌ Ошибка: {error.Description}");
+                    Console.WriteLine($"❌ Error: {error.Description}");
                 }
             }
         }
         else
         {
-            Console.WriteLine("ℹ Админ уже существует.");
+            Console.WriteLine("ℹ Admin already exists.");
         }
     }
 }
