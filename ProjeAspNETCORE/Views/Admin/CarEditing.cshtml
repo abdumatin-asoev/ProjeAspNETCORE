@@ -1,16 +1,19 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model ProjeAspNETCORE.Models.Car
-
 @{
-    ViewData["Title"] = "PostACar";
-    Layout = "~/Views/Home/AdminHomePage.cshtml";
+    ViewData["Title"] = "CarEditng";
+    Layout = "~/Views/Admin/AdminHomePage.cshtml";
 }
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
     <link href="~/SideBarTemplate/bootstrap.min.css" rel="stylesheet" />
     <style>
+        .container.mt-5 {
+            padding-top: 30px;
+        }
+
         .form-container {
             background-color: #ffffff;
             border-radius: 10px;
@@ -37,12 +40,15 @@
 <body>
     <main class="container mt-5">
         <div class="form-container">
-            <h2 class="form-title">Post Car</h2>
+            <h2 class="form-title">Update Car</h2>
 
-            <form asp-action="PostACarControll" enctype="multipart/form-data" method="post">
+            <form action="UpdateACar" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="ImagePath" />
+                <input type="hidden" asp-for="Id" />
+
                 <div class="mb-3 text-center">
-                    <img id="imagePreview" class="upload-preview" alt="Image Preview" style="display: none; max-width: 200px;">
-                    <input class="form-control" type="file" name="ImagePath" onchange="previewImage(event)">
+                    <img id="imagePreview" src="@Model.ImagePath" class="upload-preview" alt="Car" style="display: block; max-width: 200px;" />
+                    <input class="form-control" type="file" name="ImagePath" id="Image" accept="image/*" onchange="previewImage(event)" />
                 </div>
 
                 <div class="mb-3">
@@ -102,28 +108,24 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn custom-btn">Post Car</button>
+                    <button type="submit" class="btn custom-btn">Update Car</button>
                 </div>
             </form>
+
+            <script>
+                function previewImage(event) {
+                    const image = event.target.files[0];
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const imagePreview = document.getElementById('imagePreview');
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+
+                    reader.readAsDataURL(image);
+                }
+            </script>
         </div>
-
-        <script>
-            function previewImage(event) {
-                const image = event.target.files[0];
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const imagePreview = document.getElementById('imagePreview');
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                };
-
-                reader.readAsDataURL(image);
-            }
-        </script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
     </main>
 </body>

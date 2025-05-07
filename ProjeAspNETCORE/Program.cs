@@ -34,19 +34,23 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
-
-// Middleware configuration
-if (!app.Environment.IsDevelopment())
+// Add session services
+builder.Services.AddSession(options =>
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
+
 
 app.UseAuthentication(); // 🔥 MANDATORY before UseAuthorization
 app.UseAuthorization();

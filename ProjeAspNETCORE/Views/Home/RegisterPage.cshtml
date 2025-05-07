@@ -9,8 +9,6 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-<!------ Include the above in your HEAD tag ---------->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,11 +18,10 @@
 
     <!-- Website Font style -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    
     <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
-    <link href="~/SideBarTemplate/StyleSheet1.css" rel="stylesheet" />
+
+    <link href="~/SideBarTemplate/RegisterPageStyle.css" rel="stylesheet" />
 
     <title>Registration</title>
 </head>
@@ -59,7 +56,7 @@
                         <label for="email" class="cols-sm-2 control-label">Your Email</label>
                         <div class="cols-sm-10">
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                <span class="input-group-addon"><i class="fa fa-envelope" aria-hidden="true"></i></span>
                                 <input asp-for="Email" type="email" class="form-control" placeholder="Enter your Email"/>
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>

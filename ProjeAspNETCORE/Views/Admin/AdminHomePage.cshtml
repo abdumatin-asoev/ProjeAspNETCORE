@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -34,11 +35,11 @@
                 </div>
                 <div class="navi">
                     <ul>
-                        <li><a href="ListOfCarsForAdmin"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Main</span></a></li>
-                        <li><a href="PostACar"><i class="fa fa-post" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Post</span></a></li>
-                        <li><a href="Booking"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Bookings</span></a></li>
-                        <li><a href="AdminSearch"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Search</span></a></li>
-                        <li><a href="LogOut"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
+                        <li><a asp-controller="Admin" asp-action="ListOfCarsForAdmin"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Main</span></a></li>
+                        <li><a asp-controller="Admin" asp-action="PostACar"><i class="fa fa-post fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Post</span></a></li>
+                        <li><a asp-controller="Admin" asp-action="Booking"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Bookings</span></a></li>
+                        <li><a asp-controller="Admin" asp-action="AdminSearch"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Search</span></a></li>
+                        <li><a asp-controller="Home" asp-action="LogOut"><i class="fa" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
                     </ul>
                 </div>
             </div>

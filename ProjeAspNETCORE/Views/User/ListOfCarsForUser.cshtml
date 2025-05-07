@@ -2,7 +2,7 @@
 @model List<ProjeAspNETCORE.Models.Car>
 @{
     ViewData["Title"] = "ListOfCarsForUser";
-    Layout = "~/Views/Home/UserHomePage.cshtml";
+    Layout = "~/Views/User/UserHomePage.cshtml";
 }
 <head>
     <meta charset="utf-8" />
@@ -21,7 +21,7 @@
         .fixed-image {
             width: 100%; /* Ensures the image takes the full width of the card */
             height: 200px; /* Fixed height for all images */
-            object-fit: cover; /* Ensures the image fits within the dimensions without distortion */
+            object-fit: fill; /* Ensures the image fits within the dimensions without distortion */
             border-radius: 5px; /* Optional: Add rounded corners to match the card style */
         }
     </style>
@@ -62,7 +62,7 @@
                             <p>
                                 @car.Description
                             </p>
-                            <a asp-controller="Home" asp-action="UserBookACar" asp-route-id="@car.Id" class="btn btn-sm btn-primary">Book</a>
+                            <a asp-controller="User" asp-action="UserBookACar" asp-route-id="@car.Id" class="btn btn-sm btn-primary">Book</a>
                         </div>
                     </div>
                 </div>

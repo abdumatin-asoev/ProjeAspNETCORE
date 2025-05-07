@@ -1,7 +1,7 @@
 ﻿@model List<ProjeAspNETCORE.Models.Car>
 @{
     ViewData["Title"] = "ListOfCarsForAdmin";
-    Layout = "~/Views/Home/AdminHomePage.cshtml";
+    Layout = "~/Views/Admin/AdminHomePage.cshtml";
 }
 <head>
     <meta charset="utf-8" />
@@ -20,7 +20,7 @@
         .fixed-image {
             width: 100%; /* Ensures the image takes the full width of the card */
             height: 200px; /* Fixed height for all images */
-            object-fit: cover; /* Ensures the image fits within the dimensions without distortion */
+            object-fit: fill; /* Ensures the image fits within the dimensions without distortion */
             border-radius: 5px; /* Optional: Add rounded corners to match the card style */
         }
     </style>
