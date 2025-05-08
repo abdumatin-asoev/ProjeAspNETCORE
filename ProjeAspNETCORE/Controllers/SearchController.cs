@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
 using ProjeAspNETCORE.Models;
 
 namespace ProjeAspNETCORE.Controllers
@@ -8,15 +8,17 @@ namespace ProjeAspNETCORE.Controllers
     {
         private readonly Context _context;
 
+        // Constructor to initialize the database context
         public SearchController(Context context)
         {
             _context = context;
         }
 
+        // Handles car search functionality
         [HttpPost]
         public IActionResult Search(SearchClass search)
         {
-            // Repopulate the ViewBag for dropdowns
+            // Repopulate dropdowns for search filters
             ViewBag.ListOfBrands = new SelectList(CarProperties.GetBrands());
             ViewBag.ListOfTypes = new SelectList(CarProperties.GetType());
             ViewBag.ListOfColors = new SelectList(CarProperties.GetColors());
@@ -28,15 +30,13 @@ namespace ProjeAspNETCORE.Controllers
                 string.IsNullOrEmpty(search.Color) &&
                 string.IsNullOrEmpty(search.Transmission))
             {
-                // Return an empty list if no filters are selected
                 search.CarsFound = new List<Car>();
             }
             else
             {
-                // Start with the base query
+                // Apply filters to the query
                 var query = _context._Car.AsQueryable();
 
-                // Apply filters based on the search criteria
                 if (!string.IsNullOrEmpty(search.Brand))
                     query = query.Where(c => c.Brand == search.Brand);
 

@@ -1,23 +1,24 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using ProjeAspNETCORE.Models;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjeAspNETCORE.Controllers
 {
     public class UserController : Controller
     {
         private readonly Context _context;
+
+        // Constructor to initialize the database context
         public UserController(Context context)
         {
             _context = context;
         }
 
+        // Displays the user's home page
         public IActionResult UserHomePage()
         {
-            // Check if user is logged in
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Login", "Home");
@@ -25,14 +26,16 @@ namespace ProjeAspNETCORE.Controllers
 
             return View();
         }
+
+        // Displays the user's booking page
         public IActionResult UserBookingPage()
         {
-            // Check if user is logged in
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Login", "Home");
             }
 
+            // Retrieve bookings for the logged-in user
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!long.TryParse(userIdString, out long userId))
             {
@@ -47,9 +50,9 @@ namespace ProjeAspNETCORE.Controllers
             return View(bookings);
         }
 
+        // Displays the car booking page for a specific car
         public IActionResult UserBookACar(long id)
         {
-            // Check if user is logged in
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Login", "Home");
@@ -62,36 +65,35 @@ namespace ProjeAspNETCORE.Controllers
             }
             User _user = _context._User.Find(userId);
             Car car = _context._Car.Find(id);
-            BookACar bookingCar = new BookACar();
-            bookingCar.Car = car;
-            bookingCar.User = _user;
-            bookingCar.UserId = _user.Id;
-            bookingCar.CarId = id;
+            BookACar bookingCar = new BookACar
+            {
+                Car = car,
+                User = _user,
+                UserId = _user.Id,
+                CarId = id
+            };
             return View(bookingCar);
         }
 
+        // Displays the search page for users
         public IActionResult UserSearchPage()
         {
-            // Check if user is logged in
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Login", "Home");
             }
 
             ViewBag.ListOfBrands = new SelectList(CarProperties.GetBrands());
-
             ViewBag.ListOfColors = new SelectList(CarProperties.GetColors());
-
             ViewBag.ListOfTypes = new SelectList(CarProperties.GetType());
-
             ViewBag.ListOfTransmissions = new SelectList(CarProperties.GetTransmissions());
             SearchClass first = new SearchClass();
             return View(first);
         }
 
+        // Displays the list of cars available for users
         public IActionResult ListOfCarsForUser()
         {
-            // Check if user is logged in
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
             {
                 return RedirectToAction("Login", "Home");
@@ -101,6 +103,7 @@ namespace ProjeAspNETCORE.Controllers
             return View(cars);
         }
 
+        // Handles car booking by the user
         [HttpPost]
         public async Task<IActionResult> BookACar(BookACar booking)
         {
@@ -113,7 +116,6 @@ namespace ProjeAspNETCORE.Controllers
 
             if (overlappingBookings.Any())
             {
-                // Return an error message if dates overlap
                 ModelState.AddModelError("CarDateNotBookable", "The selected dates are unavailable for this car.");
                 var car = _context._Car.Find(booking.CarId);
                 var user = _context._User.Find(booking.UserId);

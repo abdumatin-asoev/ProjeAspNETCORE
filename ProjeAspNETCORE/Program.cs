@@ -51,7 +51,6 @@ app.UseRouting();
 
 app.UseSession();
 
-
 app.UseAuthentication(); // 🔥 MANDATORY before UseAuthorization
 app.UseAuthorization();
 
